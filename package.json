@@ -1,12 +1,12 @@
 {
   "name": "fallwell",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "test": "tsx --test src/simulation.test.ts",
+    "test": "tsx --test src/*.test.ts worker/*.test.ts",
     "deploy": "npm run build && npx --yes wrangler@4.145.0 deploy --config wrangler.jsonc",
     "preview": "vite preview --host 127.0.0.1",
     "deploy:check": "npx --yes wrangler@4.145.0 deploy --dry-run --config wrangler.jsonc"

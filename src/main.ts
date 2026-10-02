@@ -34,7 +34,7 @@ function readBest() {
 let best = readBest();
 document.querySelector("#app")!.innerHTML = `
   <div class="stage-fit"><main class="shell" data-mode="menu">
-    <header><a class="brand" href="/" aria-label="坠井者首页">F<span>↓</span>W</a><span class="edition">FALLWELL <small class="version">${__APP_VERSION__}</small></span><a class="repo-link" href="https://github.com/holynova/fallwell" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源码">GitHub ↗</a><button id="sound" class="icon" aria-label="切换音效">声音 开</button></header>
+    <header><a class="brand" href="${import.meta.env.BASE_URL}" aria-label="坠井者首页">F<span>↓</span>W</a><span class="edition">FALLWELL <small class="version">${__APP_VERSION__}</small></span><a class="repo-link" href="https://github.com/holynova/fallwell" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源码">GitHub ↗</a><button id="sound" class="icon" aria-label="切换音效">声音 开</button></header>
     <section class="cabinet" aria-label="游戏区域">
       <div class="hud"><div><label>生命</label><strong id="health"></strong></div><div class="hud-depth"><label id="stage">废弃矿井</label><strong id="depth">0000<span>m</span></strong></div><button id="pause" class="icon" aria-label="暂停游戏">Ⅱ</button></div>
       <div class="viewport"><div id="game"></div><div id="core-badge"></div><div id="route-signs"></div><div id="notice" aria-live="polite"></div><div id="overlay"></div><div id="bossbar"><span>井底守卫</span><div><i></i></div></div></div>
@@ -83,18 +83,18 @@ function overlay() {
       ]
         .map((id) => {
           const old = upgrades.find((u) => u.id === id)!;
-          return `<button class="choice" data-replace="${id}" style="--accent:${old.color}"><img class="item-icon" src="/assets/icons/${id}.svg" alt=""><div><h3>替换 ${old.name} · ${sim.rank(id)} 级</h3><p>${relicEffect(old.id, sim.rank(old.id))}</p></div></button>`;
+          return `<button class="choice" data-replace="${id}" style="--accent:${old.color}"><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><h3>替换 ${old.name} · ${sim.rank(id)} 级</h3><p>${relicEffect(old.id, sim.rank(old.id))}</p></div></button>`;
         })
         .join(
           "",
         )}<button class="secondary" id="cancel-replace">取消，返回选择</button></div>`;
     } else if (sim.rewardKind !== "relic") {
-      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.rewardKind === "core" ? "FIRST CORE / 首次补给" : "CORE EXCHANGE / 试炼奖励"}</div><h2>${sim.rewardKind === "core" ? "选择这局的打法。" : "换一种打法？"}</h2><p>${sim.rewardKind === "core" ? "已恢复 1 点生命 · 核心立即生效" : "更换不补弹 · 已获得 40 晶石"}</p>${cores.map((c, i) => `<button class="choice" data-core="${c.id}" style="--accent:${c.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="/assets/icons/core-${c.id}.svg" alt=""><div><small>${c.tag}${sim.core === c.id ? " · 当前核心" : ""}</small><h3>${c.name}</h3><p>${c.desc}</p></div></button>`).join("")}${sim.rewardKind === "exchange" ? '<button class="secondary" id="skip">保留当前核心</button>' : "<small>核心只能有一个 · 落地或踩怪补弹</small>"}</div>`;
+      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.rewardKind === "core" ? "FIRST CORE / 首次补给" : "CORE EXCHANGE / 试炼奖励"}</div><h2>${sim.rewardKind === "core" ? "选择这局的打法。" : "换一种打法？"}</h2><p>${sim.rewardKind === "core" ? "已恢复 1 点生命 · 核心立即生效" : "更换不补弹 · 已获得 40 晶石"}</p>${cores.map((c, i) => `<button class="choice" data-core="${c.id}" style="--accent:${c.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/core-${c.id}.svg" alt=""><div><small>${c.tag}${sim.core === c.id ? " · 当前核心" : ""}</small><h3>${c.name}</h3><p>${c.desc}</p></div></button>`).join("")}${sim.rewardKind === "exchange" ? '<button class="secondary" id="skip">保留当前核心</button>' : "<small>核心只能有一个 · 落地或踩怪补弹</small>"}</div>`;
     } else {
       root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.midRunUpgrade ? "TRIAL / 同类强化" : "REST / 关末构筑"}</div><h2>让这局形成组合。</h2><p>${sim.coreData?.goal ?? "收集遗物完善打法"} · 槽位 ${sim.owned.size}/4</p>${sim.choices
         .map((id, i) => {
           const u = upgrades.find((u) => u.id === id)!;
-          return `<button class="choice" data-upgrade="${id}" style="--accent:${u.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="/assets/icons/${id}.svg" alt=""><div><small>${u.tag}${u.family === sim.core ? " · 核心协同" : ""}</small><h3>${u.name} · ${sim.rank(id) + 1} 级</h3><p>${relicEffect(u.id, sim.rank(id) + 1)}${sim.owned.has(id) ? " 升级现有遗物。" : sim.owned.size === 4 ? " 需要替换一件。" : ""}</p></div></button>`;
+          return `<button class="choice" data-upgrade="${id}" style="--accent:${u.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><small>${u.tag}${u.family === sim.core ? " · 核心协同" : ""}</small><h3>${u.name} · ${sim.rank(id) + 1} 级</h3><p>${relicEffect(u.id, sim.rank(id) + 1)}${sim.owned.has(id) ? " 升级现有遗物。" : sim.owned.size === 4 ? " 需要替换一件。" : ""}</p></div></button>`;
         })
         .join(
           "",
@@ -233,7 +233,7 @@ function loadoutHtml() {
     (sim.owned.size
       ? `<div class="equipped-grid">${[...sim.owned].map((id) => {
         const u = upgrades.find((u) => u.id === id)!;
-        return `<div class="equipped"><img class="loadout-icon" src="/assets/icons/${u.id}.svg" alt=""><div><strong>${u.name} · ${sim.rank(id)} 级</strong><small>${relicEffect(id, sim.rank(id))}</small></div></div>`;
+        return `<div class="equipped"><img class="loadout-icon" src="${import.meta.env.BASE_URL}assets/icons/${u.id}.svg" alt=""><div><strong>${u.name} · ${sim.rank(id)} 级</strong><small>${relicEffect(id, sim.rank(id))}</small></div></div>`;
       }).join("")}</div>`
       : '<p class="empty-loadout">遗物 0 / 4 · 完成试炼或关卡获得</p>');
 }

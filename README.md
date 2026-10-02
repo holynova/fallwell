@@ -8,7 +8,7 @@ English: An original browser descent roguelite inspired by Downwell. Pick one of
 
 ## 在线体验 / Live Demo
 
-- [Cloudflare Demo](https://fallwell.xiaosang.cc/)（自定义域名待验证 / Custom domain verification pending）
+- [Cloudflare Demo](https://xiaosang.cc/fallwell/)（正式路径待验证 / Public path verification pending）
 - [GitHub Repo](https://github.com/holynova/fallwell)
 
 <img src="./assets/qr.png" width="180" alt="扫码访问 FALLWELL 在线体验">
@@ -42,3 +42,6 @@ Phaser · TypeScript · Vite · Cloudflare Workers Static Assets。
 Source and deployment configuration share main; deploy manually from the same commit.
 
 玩法、素材与验证记录见 DEVELOPMENT_PLAN.md、ART_DIRECTION.md、AUDIO_DIRECTION.md 和 ROGUELITE_REDESIGN.md。游戏平衡仍持续调校。
+
+使用独立 fallwell Worker 的 /fallwell/ 路由复用主域名，避免新增自定义域名配额。
+The independent fallwell Worker is mounted at /fallwell/ on the portfolio host.

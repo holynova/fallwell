@@ -2,8 +2,8 @@ import Phaser from "phaser";
 import type { Simulation } from "./simulation";
 import { LEVELS } from "./levels";
 export const ASSETS = {
-  atlas: "/assets/art/characters-v1.webp",
-  background: "/assets/art/biomes-v1.webp",
+  atlas: `${import.meta.env.BASE_URL}assets/art/characters-v1.webp`,
+  background: `${import.meta.env.BASE_URL}assets/art/biomes-v1.webp`,
 };
 const names = [
   "hero-idle",
