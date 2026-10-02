@@ -1,34 +1,32 @@
 # 已发布项目检查补齐 · 2026-10-02
 
-## 正式地址
+## 正式地址已完成
 
-唯一正式目标为 https://fallwell.xiaosang.cc/，游戏运行在根路径 /。
-2026-10-02 已撤销误配的 xiaosang.cc/fallwell 与 xiaosang.cc/fallwell/* 两条路由，API 回读确认删除；其他项目绑定未改动。
-Wrangler 配置、README、二维码、待发布作品集及 Profile 材料统一使用正式子域名，不再采用主域名子路径。
+https://fallwell.xiaosang.cc/ 已上线，HTTPS、页面 v0.1.3 与核心操作验证通过。
+通过 cf v1.0.0-beta.12 创建唯一目标子域名的代理 A 记录，并用既有 Worker fallwell 的精确 Route 绑定；地址保持子域名根路径 /。
+不新增 Workers Custom Domain，100 个绑定配额维持原数，其他项目域名未改动。
+旧 xiaosang.cc/fallwell 与 xiaosang.cc/fallwell/* 路由已撤销。
 
-## 当前阻碍
+## 项目与材料
 
-- Cloudflare API 回读：xiaosang.cc 的 Workers Custom Domains 数量为 100，fallwell 无绑定；新增绑定被错误 100122 拒绝。
-- 公共 DNS over HTTPS 查询正式子域名返回 NXDOMAIN；系统 DNS 的代理 fake IP 不作为上线证据。
-- 同一子域名的 Worker Route 方案需要代理 DNS 记录；当前 Wrangler OAuth 的 DNS Records API 返回 403，无 DNS 写入权限。
-- Cloudflare 浏览器控制台未登录，正在等待用户完成登录，以继续配置同一正式子域名。
-- 正式地址尚未验证，GitHub Homepage 与作品集/Profile 发布保持待完成；不发布故障 Demo。
+- GitHub：https://github.com/holynova/fallwell；唯一源码分支 main；路由配置提交 bc06bc1。
+- GitHub Homepage、README、二维码、作品集和 Profile Demo 统一为正式子域名。
+- 应用 v0.1.3 的既有截图、二维码、Umami 和可见 GitHub 入口已检查复用；本次不修改游戏代码或递增应用版本。
+- 既有 33 项游戏逻辑测试通过；路由配置 Wrangler dry-run 通过。
+- README 双语正文校验通过；二维码独立解码为 https://fallwell.xiaosang.cc/。
+- 23 个正式域名资源返回 HTTP 200，JS/CSS/图片 SHA-256 与 dist 相同；HTML 剔除平台注入的既有 Cloudflare 统计脚本后主体相同。
+- 浏览器角色选择、移动、开火、Esc 暂停/继续、音量与五种窗口尺寸通过，页面错误为 0。
+- Worker deployment：6d96c7b2-1cbb-4cc9-9e86-874f39ca0aec；version：6f1b4ba2-ead3-4b08-84e7-6fc26ea6a057。
+- 详细 DNS、Route 编号与后续部署方式见 DEPLOYMENT.md。
 
-## 已准备与独立完成项
+## 作品集与 Profile
 
-- GitHub：https://github.com/holynova/fallwell；公开仓库，唯一主分支 main。
-- 根路径修复版本 v0.1.3；保留可见版本、GitHub 源码入口与统一 Umami。
-- 应用提交 e7069f64fc1f5a7a299fa220de65658f1842fb11 已推送至 origin/main，既有 Worker 已修复部署。
-- 临时地址的 23 个线上文件为 HTTP 200，哈希全部与生产构建一致；浏览器核心操作与五种窗口尺寸通过，页面错误为 0。
-- 33 项游戏逻辑测试、生产构建、Wrangler dry-run 和版本校验通过。
-- README 双语说明及截图文件检查通过，二维码独立解码确认为 https://fallwell.xiaosang.cc/。
-- 正式发布技能已增加强制子域名与根路径约束；额度、权限或 TLS 阻碍不得擅自改变正式地址，“继续”不代表同意换地址。
-- 既有 workers.dev 仅作为临时访问与修复验证地址，不替代正式 Demo：https://fallwell.holy-nova.workers.dev/。
+- 作品集沿用最新 master，从 detached checkout 只新增 FALLWELL 条目与截图。
+- master 提交 b7b11278fdc78142e8a39db0b81f46167f82e2c8 已推送并手动部署至 xiaosang-portfolio。
+- 作品集 version：6ad58ef4-5676-4446-87d7-59185b8a5fe0；deployment：181b3972-2354-415f-9c30-2bca72d85aad。
+- 线上 https://xiaosang.cc/data/repos.json 与该提交完整结构一致，共 103 个条目，FALLWELL 仅一条；线上截图哈希一致。
+- Profile main 提交 298bb1a 已推送；公开 README 与发布内容一致，FALLWELL 仅一行。
+- 浏览器作品卡片与截图正常；点击卡片预览打开正式游戏 v0.1.3；Profile 项目行、Demo 链接与预览图均验证通过。
 
-## 待发布材料
-
-- 作品集：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/portfolio，唯一数据源 master。
-- Profile：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/profile，main。
-
-正式子域名 HTTPS 与核心功能验证通过后，再设置 GitHub Homepage、提交推送作品集并独立手动部署 xiaosang-portfolio、回读 JSON 与卡片，然后发布 Profile。
-最终部署编号与线上验证结果记录在 DEPLOYMENT.md。
+发布工作区：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-dns-20261002。
+没有新增发布分支、Cloudflare 自动部署 workflow 或 Workers Builds 集成。

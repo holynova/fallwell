@@ -8,7 +8,7 @@ English: An original browser descent roguelite inspired by Downwell. Pick one of
 
 ## 在线体验 / Live Demo
 
-- [Cloudflare Demo](https://fallwell.xiaosang.cc/)（域名绑定待完成 / Domain binding pending）
+- [Cloudflare Demo](https://fallwell.xiaosang.cc/)
 - [GitHub Repo](https://github.com/holynova/fallwell)
 
 <img src="./assets/qr.png" width="180" alt="扫码访问 FALLWELL 在线体验">
