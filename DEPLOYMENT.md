@@ -1,3 +1,14 @@
+# 最新发布状态 · 2026-10-02
+
+- 应用 v0.1.1 已从 main 提交 8a0d25bf537a12a171d1f69654cb5d3d90175e54 手动发布到既有 Worker fallwell。
+- 可用地址：https://fallwell.holy-nova.workers.dev/。
+- Version ID：eae7c91d-b0b2-46a1-8c8b-7a6687739e1c。
+- Deployment ID：58945126-0572-4fe4-a293-63e594bfd9ca。
+- 自定义域名绑定因 xiaosang.cc 达到 100 个配额上限失败（100122）；当前 route 配置保留为待完成目标，重跑部署仍会在域名绑定步骤报错。
+- 正式地址及作品集发布待确定，完整状态见 PUBLISHING_STATUS.md。
+
+---
+
 # 发布
 
 - 公网地址：https://fallwell.holy-nova.workers.dev
