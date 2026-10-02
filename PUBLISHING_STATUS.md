@@ -1,34 +1,32 @@
 # 已发布项目检查补齐 · 2026-10-02
 
-## 已完成并验证
+## 正式地址
+
+唯一正式目标为 https://fallwell.xiaosang.cc/，游戏运行在根路径 /。
+2026-10-02 已撤销误配的 xiaosang.cc/fallwell 与 xiaosang.cc/fallwell/* 两条路由，API 回读确认删除；其他项目绑定未改动。
+Wrangler 配置、README、二维码、待发布作品集及 Profile 材料统一使用正式子域名，不再采用主域名子路径。
+
+## 当前阻碍
+
+- Cloudflare API 回读：xiaosang.cc 的 Workers Custom Domains 数量为 100，fallwell 无绑定；新增绑定被错误 100122 拒绝。
+- 公共 DNS over HTTPS 查询正式子域名返回 NXDOMAIN；系统 DNS 的代理 fake IP 不作为上线证据。
+- 同一子域名的 Worker Route 方案需要代理 DNS 记录；当前 Wrangler OAuth 的 DNS Records API 返回 403，无 DNS 写入权限。
+- Cloudflare 浏览器控制台未登录，正在等待用户完成登录，以继续配置同一正式子域名。
+- 正式地址尚未验证，GitHub Homepage 与作品集/Profile 发布保持待完成；不发布故障 Demo。
+
+## 已准备与独立完成项
 
 - GitHub：https://github.com/holynova/fallwell；公开仓库，唯一主分支 main。
-- 应用源码提交：8a0d25bf537a12a171d1f69654cb5d3d90175e54；应用版本 v0.1.1。
-- 复用既有 Cloudflare Worker：fallwell，账户 ef7863c4de93e71c3496f940c8ab4865。
-- 已上线并验证：https://fallwell.holy-nova.workers.dev/。
-- Cloudflare deployment：58945126-0572-4fe4-a293-63e594bfd9ca。
-- Cloudflare version：eae7c91d-b0b2-46a1-8c8b-7a6687739e1c。
-- 页面增加可见 v0.1.1、GitHub 源码入口和统一 Umami 脚本。
-- README 双语正文通过校验；截图为 960×900 的生产预览实机画面。
-- 二维码已独立解码确认指向 https://fallwell.xiaosang.cc/，该地址尚不可用。
-- 33 项游戏测试、生产构建、Wrangler dry-run 与版本校验通过。
-- 23 个线上产物均为 HTTP 200，哈希与本地 dist 一致。
+- 根路径修复版本 v0.1.3；保留可见版本、GitHub 源码入口与统一 Umami。
+- 33 项游戏逻辑测试、生产构建、Wrangler dry-run 和版本校验通过。
+- README 双语说明及截图文件检查通过，二维码独立解码确认为 https://fallwell.xiaosang.cc/。
+- 正式发布技能已增加强制子域名与根路径约束；额度、权限或 TLS 阻碍不得擅自改变正式地址，“继续”不代表同意换地址。
+- 既有 workers.dev 仅作为临时访问与修复验证地址，不替代正式 Demo：https://fallwell.holy-nova.workers.dev/。
 
-## 阻塞与待完成
+## 待发布材料
 
-- fallwell.xiaosang.cc 未创建：Cloudflare 错误 100122，xiaosang.cc 已达到每个 zone 100 个 Workers Custom Domains 的上限；API 回读确认数量为 100。
-- 同址 Worker Route 需要代理 DNS 记录；当前 OAuth 无法管理 DNS，DNS Records API 返回 403。
-- 正式 Demo 地址等待选择：xiaosang.cc/fallwell/；等待子域名配额；或明确授权把现有 workers.dev 地址作为作品集例外。
-- GitHub Homepage 尚未设置，README 中子域名标记为待验证。
-- 作品集 master 的 FALLWELL 条目与截图已准备，但尚未提交、推送或重新部署；线上仍为 90 个条目。
-- GitHub Profile main 的 FALLWELL 行与截图已准备，但尚未提交、推送。
+- 作品集：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/portfolio，唯一数据源 master。
+- Profile：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/profile，main。
 
-准备工作区：
-- 作品集：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/portfolio
-- Profile：/Users/sym/Documents/Codex/2026-09-30/ga/work/publish-20261002/profile
-
-## 继续发布
-
-确认正式地址后，按所选地址调整 Wrangler/链接/二维码，验证项目 HTTPS 与核心功能；设置 GitHub Homepage；提交作品集 master，并单独手动部署 xiaosang-portfolio，再回读 repos.json 与卡片；提交 Profile main 并验证。
-
-仅更新 README、截图或发布记录时不重新部署游戏。没有新增 Cloudflare 自动部署工作流或发布分支；原作品集及 Profile checkout 的修改均被保留。
+正式子域名 HTTPS 与核心功能验证通过后，再设置 GitHub Homepage、提交推送作品集并独立手动部署 xiaosang-portfolio、回读 JSON 与卡片，然后发布 Profile。
+最终部署编号与线上验证结果记录在 DEPLOYMENT.md。

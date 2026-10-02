@@ -1,23 +1,13 @@
-# 最新发布状态 · 2026-10-02
+# 发布 · 2026-10-02
 
-- 应用 v0.1.1 已从 main 提交 8a0d25bf537a12a171d1f69654cb5d3d90175e54 手动发布到既有 Worker fallwell。
-- 可用地址：https://fallwell.holy-nova.workers.dev/。
-- Version ID：eae7c91d-b0b2-46a1-8c8b-7a6687739e1c。
-- Deployment ID：58945126-0572-4fe4-a293-63e594bfd9ca。
-- 自定义域名绑定因 xiaosang.cc 达到 100 个配额上限失败（100122）；当前 route 配置保留为待完成目标，重跑部署仍会在域名绑定步骤报错。
-- 正式地址及作品集发布待确定，完整状态见 PUBLISHING_STATUS.md。
-
----
-
-# 发布
-
-- 公网地址：https://fallwell.holy-nova.workers.dev
-- Cloudflare Worker：fallwell
-- 版本：eb26b0dd-6c48-4a67-a90e-7a08973f9b2d
-- 发布日期：2026-10-01
-- 发布内容：Vite 生产构建目录 dist，静态资源托管，无后端服务。
-
-后续更新：运行 `npm test`，然后 `npm run deploy`。发布配置在 wrangler.jsonc，Wrangler 使用本机已有登录。
+- 正式地址：https://fallwell.xiaosang.cc/，绑定待完成，不能作为已上线地址。
+- 临时访问：https://fallwell.holy-nova.workers.dev/。
+- Worker：fallwell；项目唯一源码分支 main。
+- v0.1.3 已恢复根路径构建，移除 /fallwell/ 路径适配 Worker。
+- 误配的主域名两条路由已删除并回读验证。
+- Custom Domains 达到 100 个配额上限；同址 Worker Route 需要 DNS 写入权限，当前控制台待登录。
+- 发布配置 wrangler.jsonc 保留正式子域名目标；独立修复既有 Worker 时使用从此配置生成的临时无域名绑定配置，不改变正式地址。
+- 本次线上版本与源码 SHA 待修复部署后补录；完整检查状态见 PUBLISHING_STATUS.md。
 
 ## 2026-10-01 窗口适配与开局界面
 

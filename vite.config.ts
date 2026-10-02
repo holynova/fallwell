@@ -5,6 +5,6 @@ const { version } = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf8"),
 );
 export default defineConfig({
-  base: "/fallwell/",
+  base: "/",
   define: { __APP_VERSION__: JSON.stringify(`v${version}`) },
 });
