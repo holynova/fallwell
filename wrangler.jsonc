@@ -10,8 +10,8 @@
   },
   "routes": [
     {
-      "pattern": "fallwell.xiaosang.cc",
-      "custom_domain": true
+      "pattern": "fallwell.xiaosang.cc/*",
+      "zone_name": "xiaosang.cc"
     }
   ]
 }
