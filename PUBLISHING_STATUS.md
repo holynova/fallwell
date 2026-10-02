@@ -18,6 +18,8 @@ Wrangler 配置、README、二维码、待发布作品集及 Profile 材料统�
 
 - GitHub：https://github.com/holynova/fallwell；公开仓库，唯一主分支 main。
 - 根路径修复版本 v0.1.3；保留可见版本、GitHub 源码入口与统一 Umami。
+- 应用提交 e7069f64fc1f5a7a299fa220de65658f1842fb11 已推送至 origin/main，既有 Worker 已修复部署。
+- 临时地址的 23 个线上文件为 HTTP 200，哈希全部与生产构建一致；浏览器核心操作与五种窗口尺寸通过，页面错误为 0。
 - 33 项游戏逻辑测试、生产构建、Wrangler dry-run 和版本校验通过。
 - README 双语说明及截图文件检查通过，二维码独立解码确认为 https://fallwell.xiaosang.cc/。
 - 正式发布技能已增加强制子域名与根路径约束；额度、权限或 TLS 阻碍不得擅自改变正式地址，“继续”不代表同意换地址。
