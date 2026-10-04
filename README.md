@@ -1,44 +1,39 @@
-# 坠井者 / FALLWELL
+# 坠井者 · FALLWELL
 
-中文：受 Downwell 启发的原创浏览器下落动作肉鸽。选择四名角色之一，在四区十二关中射击减速、踩怪连击、落地补弹，迎战井底守卫。弹幕、跃击、陨落三种核心搭配最多四件两级遗物，同类组合可进化。窗口尺寸变化时，游戏与菜单自动缩放，首屏完整显示。
+向井底不断下落，靠射击减速、踩怪连击与落地补弹构筑自己的动作肉鸽。
 
-English: An original browser descent roguelite inspired by Downwell. Pick one of four characters, shoot to slow your fall, stomp enemies for combos, and reload on contact. Explore twelve levels across four biomes and fight the well guardian. Three exclusive cores combine with four upgradable relic slots and core evolutions. The game and menus scale to fit the browser window.
+A descent roguelite with shot-assisted falls, stomp combos, reloads, cores and relic builds.
 
-![FALLWELL gameplay](./assets/screenshot.png)
+[在线体验](https://fallwell.xiaosang.cc/) · [源码](https://github.com/holynova/fallwell)
 
-## 在线体验 / Live Demo
+![坠井者 · FALLWELL：真实页面截图](./assets/readme/screenshot.png)
 
-- [Cloudflare Demo](https://fallwell.xiaosang.cc/)
-- [GitHub Repo](https://github.com/holynova/fallwell)
+## 可以做什么
 
-<img src="./assets/qr.png" width="180" alt="扫码访问 FALLWELL 在线体验">
+- 选择角色，搭配核心与可升级遗物。
+- 探索不同区域，挑战井底守卫。
 
-## 操作 / Controls
+## 怎么玩
 
-← → / A D 移动 / Move · 空格跳跃或开火 / Space to jump or shoot · Esc 暂停 / Pause。
-空中不自动补弹。使用电脑键盘游玩；手机仅适配页面，尚无触控。
-A keyboard is required. Mobile layout adapts, but touch controls are not implemented.
+A/D或左右键移动，空格跳跃 / 空中射击；落地补弹。更多操作见游戏内提示。
 
-## 本地运行 / Run locally
+## 本地运行
 
 ```bash
 npm ci
 npm run dev
-npm test
+# 生成生产产物
 npm run build
-npm run preview
 ```
 
-## 发布 / Deploy
+这是受Downwell启发的原创项目。玩法和构筑说明见 [开发计划](DEVELOPMENT_PLAN.md) 与 [肉鸽设计](ROGUELITE_REDESIGN.md)。
+
+<img src="./assets/readme/qr.png" width="144" alt="扫码打开https://fallwell.xiaosang.cc/">
+
+## 发布
 
 ```bash
-npm run build
-npm run deploy:check
 npm run deploy
 ```
 
-Phaser · TypeScript · Vite · Cloudflare Workers Static Assets。
-唯一源码分支为 main；从同一提交在本地手动部署，无自动 Cloudflare 发布。
-Source and deployment configuration share main; deploy manually from the same commit.
-
-玩法、素材与验证记录见 DEVELOPMENT_PLAN.md、ART_DIRECTION.md、AUDIO_DIRECTION.md 和 ROGUELITE_REDESIGN.md。游戏平衡仍持续调校。
+从 `main` 同一提交在本地手动发布到Cloudflare Workers。正式地址：[https://fallwell.xiaosang.cc/](https://fallwell.xiaosang.cc/)。
