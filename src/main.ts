@@ -32,11 +32,12 @@ function readBest() {
   }
 }
 let best = readBest();
+let confirmRestart = false;
 document.querySelector("#app")!.innerHTML = `
   <div class="stage-fit"><main class="shell" data-mode="menu">
-    <header><a class="brand" href="${import.meta.env.BASE_URL}" aria-label="坠井者首页">F<span>↓</span>W</a><span class="edition">FALLWELL <small class="version">${__APP_VERSION__}</small></span><a class="repo-link" href="https://github.com/holynova/fallwell" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源码">GitHub ↗</a><button id="sound" class="icon" aria-label="切换音效">声音 开</button></header>
+    <header><a class="brand" href="${import.meta.env.BASE_URL}" aria-label="坠井者首页">F<span>↓</span>W</a><span class="edition">FALLWELL <small class="version">${__APP_VERSION__}</small></span><a class="repo-link" href="https://github.com/holynova/fallwell" target="_blank" rel="noopener noreferrer" aria-label="GitHub 源码">GitHub ↗</a><button id="sound" class="icon" aria-label="切换音效" aria-pressed="${audio.enabled}">声音 开</button></header>
     <section class="cabinet" aria-label="游戏区域">
-      <div class="hud"><div><label>生命</label><strong id="health"></strong></div><div class="hud-depth"><label id="stage">废弃矿井</label><strong id="depth">0000<span>m</span></strong></div><button id="pause" class="icon" aria-label="暂停游戏">Ⅱ</button></div>
+      <div class="hud"><div><label>生命</label><strong id="health"></strong></div><div class="hud-depth"><label id="stage">废弃矿井</label><strong id="depth">0000<span>m</span></strong></div><button id="pause" class="icon" aria-label="暂停游戏">❚❚</button></div>
       <div class="viewport"><div id="game"></div><div id="core-badge"></div><div id="route-signs"></div><div id="notice" aria-live="polite"></div><div id="overlay"></div><div id="bossbar"><span>井底守卫</span><div><i></i></div></div></div>
       <div class="bottom-hud"><div><label>弹药</label><span id="ammo"></span></div><div><span class="crystal">◆</span> <strong id="gems">0</strong></div><div class="combo"><strong id="combo">0</strong><label>连击</label></div></div>
     </section>
@@ -62,49 +63,50 @@ const el = (id: string) => document.getElementById(id)!;
 let modeCache = "",
   saved = false;
 function shopHtml() {
-  return `<div class="shop"><button data-buy="heal" ${sim.gems < sim.price("heal") || sim.hp === sim.maxHp || sim.purchases.has("heal") ? "disabled" : ""}>补 1 生命 · ${sim.price("heal")} ◆</button><button data-buy="ammo" ${sim.gems < sim.price("ammo") || sim.purchases.has("ammo") || sim.rank("ammo") === 2 || (!sim.owned.has("ammo") && sim.owned.size === 4) ? "disabled" : ""}>扩容匣 +1 级 · ${sim.price("ammo")} ◆</button><small>持有 ${sim.gems} ◆ · 本关购买次数共享</small></div>`;
+  return `<div class="shop"><button data-buy="heal" ${sim.gems < sim.price("heal") || sim.hp === sim.maxHp || sim.purchases.has("heal") ? "disabled" : ""}>补 1 生命 ${sim.price("heal")} ◆</button><button data-buy="ammo" ${sim.gems < sim.price("ammo") || sim.purchases.has("ammo") || sim.rank("ammo") === 2 || (!sim.owned.has("ammo") && sim.owned.size === 4) ? "disabled" : ""}>扩容匣 +1 级 ${sim.price("ammo")} ◆</button><small>持有 ${sim.gems} ◆，每项每关限购一次</small></div>`;
 }
 function overlay() {
   const mode = sim.mode;
   if (mode === modeCache) return;
   modeCache = mode;
+  confirmRestart = false;
   document.querySelector<HTMLElement>(".shell")!.dataset.mode = mode;
   const root = el("overlay");
   root.className = mode === "playing" ? "hidden" : "";
   if (mode === "menu")
-    root.innerHTML = `<div class="panel start-panel"><h2>坠井者</h2><p class="menu-intro">选一位角色，向深井出发。</p><div class="character-grid" role="group" aria-label="选择角色">${characters.map((c) => `<button class="character-card ${c.id === selectedCharacter ? "selected" : ""}" data-character="${c.id}" aria-pressed="${c.id === selectedCharacter}" style="--character-color:${c.color}"><span class="character-portrait" aria-hidden="true"></span><span><strong>${c.name}</strong><small>${c.hp} 生命 · ${c.ammo} 弹药</small></span></button>`).join("")}</div><p id="character-description" class="character-description">${characters.find((c) => c.id === selectedCharacter)!.desc}</p><button class="primary" id="start">进入深井 <span>↓</span></button><small class="landing-tip">空中开火减速 · 落地补弹</small></div>`;
+    root.innerHTML = `<div class="panel start-panel"><h2>坠井者</h2><p class="menu-intro">选一位角色，向深井出发。</p><div class="character-grid" role="group" aria-label="选择角色">${characters.map((c) => `<button class="character-card ${c.id === selectedCharacter ? "selected" : ""}" data-character="${c.id}" aria-pressed="${c.id === selectedCharacter}" style="--character-color:${c.color}"><span class="character-portrait" aria-hidden="true"></span><span><strong>${c.name}</strong><small>${c.hp} 生命，${c.ammo} 弹药</small></span></button>`).join("")}</div><p id="character-description" class="character-description">${characters.find((c) => c.id === selectedCharacter)!.desc}</p><button class="primary" id="start">进入深井 <span>↓</span></button><small class="landing-tip">空中开火减速，落地补弹</small></div>`;
   if (mode === "paused")
-    root.innerHTML = `<div class="panel pause-panel"><div class="eyebrow">PAUSED / ${sim.character.name}</div><h2>暂停</h2><div id="loadout">${loadoutHtml()}</div><p class="record">个人纪录 ${best.depth} m · ${best.combo} 连击</p><button class="primary" id="resume">继续下落 <span>↓</span></button><button class="secondary" id="restart">重新开始</button></div>`;
+    root.innerHTML = `<div class="panel pause-panel"><div class="eyebrow">已暂停 / ${sim.character.name}</div><h2>暂停</h2><div id="loadout">${loadoutHtml()}</div><p class="record">个人纪录 ${Math.floor(best.depth / 10)} m，${best.combo} 连击</p><button class="primary" id="resume">继续下落 <span>↓</span></button><button class="secondary" id="restart">重新开始</button></div>`;
   if (mode === "upgrade") {
     if (sim.pendingRelic) {
       const item = upgrades.find((u) => u.id === sim.pendingRelic)!;
-      root.innerHTML = `<div class="panel upgrades replacement"><div class="eyebrow">REPLACE / 遗物槽 4 / 4</div><h2>用${item.name}替换哪一件？</h2><p>${relicEffect(item.id, 1)}</p>${[
+      root.innerHTML = `<div class="panel upgrades replacement"><div class="eyebrow">替换遗物 / 遗物槽 4 / 4</div><h2>用${item.name}替换哪一件？</h2><p>${relicEffect(item.id, 1)}</p>${[
         ...sim.owned,
       ]
         .map((id) => {
           const old = upgrades.find((u) => u.id === id)!;
-          return `<button class="choice" data-replace="${id}" style="--accent:${old.color}"><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><h3>替换 ${old.name} · ${sim.rank(id)} 级</h3><p>${relicEffect(old.id, sim.rank(old.id))}</p></div></button>`;
+          return `<button class="choice" data-replace="${id}" style="--accent:${old.color}"><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><h3>替换 ${old.name} ${sim.rank(id)} 级</h3><p>${relicEffect(old.id, sim.rank(old.id))}</p></div></button>`;
         })
         .join(
           "",
         )}<button class="secondary" id="cancel-replace">取消，返回选择</button></div>`;
     } else if (sim.rewardKind !== "relic") {
-      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.rewardKind === "core" ? "FIRST CORE / 首次补给" : "CORE EXCHANGE / 试炼奖励"}</div><h2>${sim.rewardKind === "core" ? "选择这局的打法。" : "换一种打法？"}</h2><p>${sim.rewardKind === "core" ? "已恢复 1 点生命 · 核心立即生效" : "更换不补弹 · 已获得 40 晶石"}</p>${cores.map((c, i) => `<button class="choice" data-core="${c.id}" style="--accent:${c.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/core-${c.id}.svg" alt=""><div><small>${c.tag}${sim.core === c.id ? " · 当前核心" : ""}</small><h3>${c.name}</h3><p>${c.desc}</p></div></button>`).join("")}${sim.rewardKind === "exchange" ? '<button class="secondary" id="skip">保留当前核心</button>' : "<small>核心只能有一个 · 落地或踩怪补弹</small>"}</div>`;
+      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.rewardKind === "core" ? "首次补给" : "试炼奖励"}</div><h2>${sim.rewardKind === "core" ? "选择这局的打法。" : "换一种打法？"}</h2><p>${sim.rewardKind === "core" ? "已恢复 1 点生命，核心立即生效" : "更换不补弹，已获得 40 晶石"}</p>${cores.map((c, i) => `<button class="choice" data-core="${c.id}" style="--accent:${c.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/core-${c.id}.svg" alt=""><div><small>${c.tag}${sim.core === c.id ? "，当前核心" : ""}</small><h3>${c.name}</h3><p>${c.desc}</p></div></button>`).join("")}${sim.rewardKind === "exchange" ? '<button class="secondary" id="skip">保留当前核心</button>' : "<small>核心只能有一个，落地或踩怪补弹</small>"}</div>`;
     } else {
-      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.midRunUpgrade ? "TRIAL / 同类强化" : "REST / 关末构筑"}</div><h2>让这局形成组合。</h2><p>${sim.coreData?.goal ?? "收集遗物完善打法"} · 槽位 ${sim.owned.size}/4</p>${sim.choices
+      root.innerHTML = `<div class="panel upgrades"><div class="eyebrow">${sim.midRunUpgrade ? "同类强化" : "关末构筑"}</div><h2>让这局形成组合。</h2><p>${sim.coreData?.goal ?? "收集遗物完善打法"}，槽位 ${sim.owned.size}/4</p>${sim.choices
         .map((id, i) => {
           const u = upgrades.find((u) => u.id === id)!;
-          return `<button class="choice" data-upgrade="${id}" style="--accent:${u.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><small>${u.tag}${u.family === sim.core ? " · 核心协同" : ""}</small><h3>${u.name} · ${sim.rank(id) + 1} 级</h3><p>${relicEffect(u.id, sim.rank(id) + 1)}${sim.owned.has(id) ? " 升级现有遗物。" : sim.owned.size === 4 ? " 需要替换一件。" : ""}</p></div></button>`;
+          return `<button class="choice" data-upgrade="${id}" style="--accent:${u.color}"><span class="choice-num">0${i + 1}</span><img class="item-icon" src="${import.meta.env.BASE_URL}assets/icons/${id}.svg" alt=""><div><small>${u.tag}${u.family === sim.core ? "，核心协同" : ""}</small><h3>${u.name} ${sim.rank(id) + 1} 级</h3><p>${relicEffect(u.id, sim.rank(id) + 1)}${sim.owned.has(id) ? " 升级现有遗物。" : sim.owned.size === 4 ? " 需要替换一件。" : ""}</p></div></button>`;
         })
         .join(
           "",
-        )}${!sim.choices.length ? "<p>同类遗物均已满级或尚未装备，可带着晶石继续。</p>" : ""}${sim.midRunUpgrade ? "" : shopHtml()}<div class="reward-actions"><button class="secondary" id="reroll" ${sim.rerolled || sim.midRunUpgrade || sim.gems < sim.price("reroll") ? "disabled" : ""}>重抽 · ${sim.price("reroll")} ◆</button><button class="secondary" id="skip">跳过 · +10 ◆</button></div></div>`;
+        )}${!sim.choices.length ? "<p>同类遗物均已满级或尚未装备，可带着晶石继续。</p>" : ""}${sim.midRunUpgrade ? "" : shopHtml()}<div class="reward-actions"><button class="secondary" id="reroll" ${sim.rerolled || sim.midRunUpgrade || sim.gems < sim.price("reroll") ? "disabled" : ""}>重抽 ${sim.price("reroll")} ◆</button><button class="secondary" id="skip">跳过 +10 ◆</button></div></div>`;
     }
   }
   if (mode === "shop")
-    root.innerHTML = `<div class="panel"><div class="eyebrow">SIDE SHOP / 本关继续</div><h2>补给，还是强化？</h2><p>每项每关限购一次 · 容量提升不会补弹</p>${shopHtml()}<button class="primary" id="leave-shop">继续下落 ↓</button></div>`;
+    root.innerHTML = `<div class="panel"><div class="eyebrow">支线商店 / 本关继续</div><h2>补给，还是强化？</h2><p>每项每关限购一次，容量提升不会补弹</p>${shopHtml()}<button class="primary" id="leave-shop">继续下落 ↓</button></div>`;
   if (mode === "evolution")
-    root.innerHTML = `<div class="panel"><div class="seal">✦</div><div class="eyebrow">EVOLUTION / 两件同类遗物</div><h2>${sim.coreData!.name} → ${sim.coreData!.evolution}</h2><p>${sim.core === "barrage" ? "散射弹从 3 枚增加至 5 枚，消耗仍为 2。" : sim.core === "leap" ? "踩踏冲击扩大至 100，伤害提升至 2。" : "落地冲击扩大至 130，向平台两侧延伸。"}</p><button class="primary" id="evolve">确认进化，继续 ↓</button></div>`;
+    root.innerHTML = `<div class="panel"><div class="seal">✦</div><div class="eyebrow">进化 / 两件同类遗物</div><h2>${sim.coreData!.name} → ${sim.coreData!.evolution}</h2><p>${sim.core === "barrage" ? "散射弹从 3 枚增加至 5 枚，消耗仍为 2。" : sim.core === "leap" ? "踩踏冲击扩大至 100，伤害提升至 2。" : "落地冲击扩大至 130，向平台两侧延伸。"}</p><button class="primary" id="evolve">确认进化，继续 ↓</button></div>`;
   if (mode === "dead" || mode === "won") {
     if (!saved) {
       best = {
@@ -116,7 +118,7 @@ function overlay() {
       } catch {}
       saved = true;
     }
-    root.innerHTML = `<div class="panel"><div class="seal">${mode === "won" ? "✦" : "↓"}</div><div class="eyebrow">${mode === "won" ? "THE CORE IS YOURS" : "ONE MORE DESCENT"}</div><h2>${mode === "won" ? "你抵达了井底。" : "深井记住了你。"}</h2><p>${mode === "won" ? "核心已取回。下一次，试试不同的构筑。" : "换一条路线，再往下走一次。"}</p><p>本局：${sim.coreData ? (sim.evolved.has(sim.core!) ? sim.coreData.evolution : sim.coreData.name) : "标准枪靴"} · ${sim.owned.size} 件遗物<br>${sim.deathReason || "下次试试另一种组合"}<br>射击 ${sim.stats.shots} · 踩踏 ${sim.stats.stomps} · 重坠 ${sim.stats.slams}</p><div class="results"><div><strong>${Math.floor(sim.depth)}</strong><label>下落深度</label></div><div><strong>${sim.bestCombo}</strong><label>最高连击</label></div><div><strong>${sim.kills}</strong><label>击败敌人</label></div></div><button class="primary" id="restart">再来一局 ↓</button><button class="secondary" id="characters">更换角色</button></div>`;
+    root.innerHTML = `<div class="panel"><div class="seal">${mode === "won" ? "✦" : "↓"}</div><div class="eyebrow">${mode === "won" ? "核心已取回" : "再来一次"}</div><h2>${mode === "won" ? "你抵达了井底。" : "深井记住了你。"}</h2><p>${mode === "won" ? "核心已取回。下一次，试试不同的构筑。" : "换一条路线，再往下走一次。"}</p><p>本局：${sim.coreData ? (sim.evolved.has(sim.core!) ? sim.coreData.evolution : sim.coreData.name) : "标准枪靴"}，${sim.owned.size} 件遗物<br>${sim.deathReason || "下次试试另一种组合"}<br>射击 ${sim.stats.shots}，踩踏 ${sim.stats.stomps}，重坠 ${sim.stats.slams}</p><div class="results"><div><strong>${Math.floor(sim.depth / 10)}</strong><label>下落深度</label></div><div><strong>${sim.bestCombo}</strong><label>最高连击</label></div><div><strong>${sim.kills}</strong><label>击败敌人</label></div></div><button class="primary" id="restart">再来一局 ↓</button><button class="secondary" id="characters">更换角色</button></div>`;
   }
   const refresh = () => {
     modeCache = "";
@@ -185,7 +187,15 @@ function overlay() {
     overlay();
   });
   root.querySelector("#start")?.addEventListener("click", start);
-  root.querySelector("#restart")?.addEventListener("click", start);
+  root.querySelector("#restart")?.addEventListener("click", (e) => {
+    if (mode === "paused" && !confirmRestart) {
+      confirmRestart = true;
+      (e.currentTarget as HTMLButtonElement).textContent = "确认重新开始？";
+      return;
+    }
+    confirmRestart = false;
+    start();
+  });
   root.querySelector("#resume")?.addEventListener("click", () => sim.pause());
   root.querySelectorAll<HTMLButtonElement>("[data-upgrade]").forEach(
     (b) =>
@@ -229,13 +239,13 @@ window.addEventListener("blur", () => {
 function loadoutHtml() {
   return (sim.coreData
     ? `<div class="core-summary" style="--accent:${sim.coreData.color}"><strong>${sim.evolved.has(sim.core!) ? sim.coreData.evolution : sim.coreData.name}</strong><small>${sim.evolved.has(sim.core!) ? "已进化" : sim.coreData.goal}</small></div>`
-    : '<p class="empty-loadout">650 m 获得首个核心</p>') +
+    : '<p class="empty-loadout">65 m 获得首个核心</p>') +
     (sim.owned.size
       ? `<div class="equipped-grid">${[...sim.owned].map((id) => {
         const u = upgrades.find((u) => u.id === id)!;
-        return `<div class="equipped"><img class="loadout-icon" src="${import.meta.env.BASE_URL}assets/icons/${u.id}.svg" alt=""><div><strong>${u.name} · ${sim.rank(id)} 级</strong><small>${relicEffect(id, sim.rank(id))}</small></div></div>`;
+        return `<div class="equipped"><img class="loadout-icon" src="${import.meta.env.BASE_URL}assets/icons/${u.id}.svg" alt=""><div><strong>${u.name} ${sim.rank(id)} 级</strong><small>${relicEffect(id, sim.rank(id))}</small></div></div>`;
       }).join("")}</div>`
-      : '<p class="empty-loadout">遗物 0 / 4 · 完成试炼或关卡获得</p>');
+      : '<p class="empty-loadout">遗物 0 / 4，完成试炼或关卡获得</p>');
 }
 function hud() {
   el("health").innerHTML = Array.from(
@@ -243,7 +253,7 @@ function hud() {
     (_, i) => `<span class="hp-heart ${i < sim.hp ? "" : "empty"}">♥</span>`,
   ).join("");
   el("depth").innerHTML =
-    String(Math.floor(sim.depth)).padStart(4, "0") + "<span>m</span>";
+    String(Math.floor(sim.depth / 10)).padStart(4, "0") + "<span>m</span>";
   el("stage").textContent =
     sim.stage === LEVELS
       ? "井底 / 守卫"
@@ -252,7 +262,7 @@ function hud() {
         (sim.zone + 1) +
         "-" +
         ((sim.stage % 3) + 1) +
-        (sim.zone === 2 ? " · 氧气 " + Math.ceil(sim.oxygen) + "s" : "");
+        (sim.zone === 2 ? "，氧气 " + Math.ceil(sim.oxygen) + " 秒" : "");
   el("ammo").innerHTML = Array.from(
     { length: sim.maxAmmo },
     (_, i) => `<i class="${i < sim.ammo ? "full" : ""}"></i>`,
@@ -270,13 +280,13 @@ function hud() {
   el("core-badge").style.display=sim.mode==="playing"?"flex":"none";
   el("route-signs").style.display=sim.mode==="playing"?"flex":"none";
   el("core-badge").innerHTML = sim.coreData
-    ? `<strong>${sim.evolved.has(sim.core!) ? sim.coreData.evolution : sim.coreData.name}</strong><span>${sim.owned.size}/4 遗物${sim.core === "fall" && sim.vy >= 420 ? " · 重坠就绪" : ""}</span>`
-    : "650m 解锁核心";
+    ? `<strong>${sim.evolved.has(sim.core!) ? sim.coreData.evolution : sim.coreData.name}</strong><span>${sim.owned.size}/4 遗物${sim.core === "fall" && sim.vy >= 420 ? "，重坠就绪" : ""}</span>`
+    : "65m 解锁核心";
   const trial = sim.trial;
   const visible =
     trial && !trial.done && sim.y > trial.start - 500 && sim.y < trial.end;
   el("route-signs").innerHTML = visible
-    ? `<span>← 安全 · +12 ◆</span><span>${cores.find((c) => c.id === trial.kind)!.tag}试炼 →<small>${trial.kind === "fall" ? "高速落地破岩" : trial.kind === "leap" ? "连续踩 3 只" : "射击清 2 座炮台"} · +40 ◆</small></span>`
+    ? `<span>← 安全 +12 ◆</span><span>${cores.find((c) => c.id === trial.kind)!.tag}试炼 →<small>${trial.kind === "fall" ? "高速落地破岩" : trial.kind === "leap" ? "连续踩 3 只" : "射击清 2 座炮台"} +40 ◆</small></span>`
     : "";
   overlay();
 }
@@ -391,8 +401,8 @@ class WellScene extends Phaser.Scene {
       g.lineStyle(3, sim.bossOpen ? 0x91d8be : 0xef907e, 0.9);
       g.strokeCircle(sim.bossX, sy(sim.bossY), 44);
       el("bossbar").querySelector("span")!.textContent = sim.bossOpen
-        ? "井底守卫 · 弱点开放"
-        : "井底守卫 · 装甲闭合";
+        ? "井底守卫（弱点开放）"
+        : "井底守卫（装甲闭合）";
     }
     for (const h of sim.hazards) {
       g.fillStyle(0xef907e, 0.15);

@@ -309,8 +309,8 @@ export class Simulation {
     this.summonAt = this.time;
     this.say(
       this.stage === LEVELS
-        ? "井底守卫 · 底部金色跳台可弹回上方"
-        : "第 " + (this.stage + 1) + " 段 · 落地或踩怪补弹",
+        ? "井底守卫，底部金色跳台可弹回上方"
+        : "第 " + (this.stage + 1) + " 段，落地或踩怪补弹",
     );
   }
   say(s: string) {
@@ -380,7 +380,7 @@ export class Simulation {
 
     this.burst(e.x, e.y, 0x91d8be);
     this.impact(e.x, e.y, "kill");
-    if (this.combo % 5 === 0) this.say(this.combo + " 连击 · 晶石奖励提升");
+    if (this.combo % 5 === 0) this.say(this.combo + " 连击，晶石奖励提升");
   }
   lineClear(x: number, y: number, tx: number, ty: number) {
     // Test interior samples; endpoints touching a ledge do not block its own impact.
@@ -865,11 +865,14 @@ export class Simulation {
           this.recalculate();
           this.refill();
         }
+        const healed = combo >= 25 && this.hp < this.maxHp;
         if (combo >= 25) this.hp = Math.min(this.maxHp, this.hp + 1);
+        const rewards: string[] = [];
+        if (combo >= 8) rewards.push("晶石 +100");
+        if (combo >= 15) rewards.push("弹药上限 +1");
+        if (healed) rewards.push("生命 +1");
         this.say(
-          combo +
-            " 连击结算" +
-            (combo >= 15 ? " · 弹药上限 +1" : combo >= 8 ? " · 晶石 +100" : ""),
+          combo + " 连击结算" + (rewards.length ? "，" + rewards.join("，") : ""),
         );
         this.combo = 0;
       }
@@ -1016,7 +1019,7 @@ export class Simulation {
       this.rewardKind = "core";
       this.midRunUpgrade = true;
       this.hp = Math.min(this.maxHp, this.hp + 1);
-      this.say("补给节点 · 恢复 1 点生命");
+      this.say("补给节点，恢复 1 点生命");
       return;
     }
     if (this.mode !== "playing") return;
@@ -1032,7 +1035,7 @@ export class Simulation {
             (t.kind === "fall" ? 1 : t.kind === "leap" ? 3 : t.targets.length);
         if (t.lane === "safe") {
           this.gems += 12;
-          this.say("安全路线 · 晶石 +12");
+          this.say("安全路线，晶石 +12");
         } else if (success) {
           this.gems += 40;
           this.stats.trials++;
@@ -1048,9 +1051,9 @@ export class Simulation {
                   this.rank(u.id) < 2,
               )
               .map((u) => u.id);
-          this.say("试炼完成 · 晶石 +40");
+          this.say("试炼完成，晶石 +40");
           return;
-        } else this.say("试炼未完成 · 下一次再挑战");
+        } else this.say("试炼未完成，下一次再挑战");
       }
     }
     if (
