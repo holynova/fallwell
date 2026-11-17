@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">坠井者 FALLWELL — 向井底下落的动作肉鸽</title>
+  <desc id="desc">深色矿井底标题：坠井者；右侧是一口竖井剖面：角色向下开火减速下落，平台与蝙蝠敌人，650 米处虚线标注解锁核心。</desc>
+
+  <rect width="1200" height="360" rx="26" fill="#101416"/>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#91d8be">DOWNWELL-LIKE · PHASER 3 · TYPESCRIPT</text>
+    <text x="56" y="128" font-size="62" font-weight="700" fill="#f2f4f8">坠井者</text>
+    <text x="56" y="168" font-size="23" fill="#c8d0dc">FALLWELL — 向井底下落的动作肉鸽</text>
+    <text x="56" y="204" font-size="19" fill="#98a4b3">射击减速、踩怪连击、落地补弹；核心进化与遗物构筑。</text>
+    <g id="chips" font-size="18" fill="#dfe5ee" text-anchor="middle">
+      <g><rect x="56" y="238" width="108" height="36" rx="18" fill="#1a2126" stroke="#2f3a40" stroke-width="1.5"/><text x="110" y="262">4 角色</text></g>
+      <g><rect x="176" y="238" width="150" height="36" rx="18" fill="#1a2126" stroke="#2f3a40" stroke-width="1.5"/><text x="251" y="262">3 核心 + 进化</text></g>
+      <g><rect x="338" y="238" width="162" height="36" rx="18" fill="#1a2126" stroke="#2f3a40" stroke-width="1.5"/><text x="419" y="262">12 遗物 × 2 阶</text></g>
+      <g><rect x="512" y="238" width="160" height="36" rx="18" fill="#1a2126" stroke="#2f3a40" stroke-width="1.5"/><text x="592" y="262">12 关 + Boss</text></g>
+    </g>
+  </g>
+
+  <g id="well" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <rect x="830" y="36" width="270" height="288" rx="8" fill="#0a0e10" stroke="#2a3438" stroke-width="2"/>
+    <!-- labels first: they sit on the dark shaft background -->
+    <g id="labels" text-anchor="middle">
+      <text x="965" y="64" font-size="18" fill="#91d8be">矿洞 / 1-1 · 106 m</text>
+      <text x="965" y="284" font-size="18" fill="#91d8be">650m 解锁核心</text>
+    </g>
+    <!-- platforms -->
+    <rect x="850" y="112" width="90" height="12" rx="2" fill="#3a4a4a"/>
+    <rect x="990" y="172" width="80" height="12" rx="2" fill="#3a4a4a"/>
+    <rect x="860" y="242" width="100" height="12" rx="2" fill="#3a4a4a"/>
+    <!-- spikes on the middle platform -->
+    <polygon points="1000,172 1006,160 1012,172" fill="#8a979e"/>
+    <polygon points="1014,172 1020,160 1026,172" fill="#8a979e"/>
+    <!-- falling player firing downward -->
+    <g id="player" transform="translate(905 84)">
+      <rect x="-8" y="-10" width="16" height="20" rx="3" fill="#e8ecf4"/>
+      <rect x="-8" y="-10" width="16" height="7" rx="3" fill="#91d8be"/>
+      <line x1="-4" y1="12" x2="-4" y2="30" stroke="#f9d879" stroke-width="3"/>
+      <line x1="4" y1="12" x2="4" y2="26" stroke="#f9d879" stroke-width="3"/>
+      <polygon points="0,44 -4,34 4,34 0,44" fill="#f9d879"/>
+      <polygon points="0,32 -10,36 -4,40 0,36 4,40 10,36" fill="#f9d879" opacity="0.9"/>
+    </g>
+    <!-- bat enemy -->
+    <g id="bat" transform="translate(1035 208)">
+      <polygon points="0,0 -16,-10 -12,2" fill="#5b8fa8"/>
+      <polygon points="0,0 16,-10 12,2" fill="#5b8fa8"/>
+      <ellipse cx="0" cy="0" rx="7" ry="5" fill="#3d6b82"/>
+      <circle cx="-3" cy="-1" r="1.5" fill="#f9d879"/>
+      <circle cx="3" cy="-1" r="1.5" fill="#f9d879"/>
+    </g>
+    <!-- core unlock line -->
+    <line x1="838" y1="296" x2="1092" y2="296" stroke="#91d8be" stroke-width="2" stroke-dasharray="6 5"/>
+  </g>
+</svg>
